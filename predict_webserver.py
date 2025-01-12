@@ -2,13 +2,16 @@ import cv2
 import mediapipe as mp
 import torch
 import numpy as np
+import os
 from transformers import ViTFeatureExtractor, ViTForImageClassification
 from flask import Flask, request, jsonify
 from PIL import Image
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = "test_uploads"
+UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
