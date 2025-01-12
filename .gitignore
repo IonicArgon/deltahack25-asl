@@ -177,3 +177,5 @@ checkpoints
 results/checkpoint-*
 results/ds2/checkpoint-1350
 results/ds2/checkpoint-2700
+A_test.png
+test_uploads/

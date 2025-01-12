@@ -5,8 +5,18 @@ import numpy as np
 from transformers import ViTFeatureExtractor, ViTForImageClassification
 from flask import Flask, request, jsonify
 from PIL import Image
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = "test_uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
@@ -81,8 +91,21 @@ model.eval()
 def predict():
     if request.method == 'POST':
         try:
-            file = request.files["image"]
-            image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+            print(request)
+            file = request.files["file"]
+
+            if file.filename == "":
+                return jsonify({"error": "No file selected"}), 400
+            
+            if not allowed_file(file.filename):
+                return jsonify({"error": "Invalid file type"}), 400
+            
+            filename = secure_filename(file.filename)
+            file.save(f"{app.config['UPLOAD_FOLDER']}/dl_{filename}")
+
+            saved_file = open(f"{app.config['UPLOAD_FOLDER']}/dl_{filename}", "rb")
+
+            image = cv2.imdecode(np.frombuffer(saved_file.read(), np.uint8), cv2.IMREAD_COLOR)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
             with mp_hands.Hands(

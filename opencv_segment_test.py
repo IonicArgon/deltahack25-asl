@@ -21,14 +21,14 @@ def main():
             results = hands.process(frame_rgb)
 
             if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    mp_drawing.draw_landmarks(
-                        image=frame,
-                        landmark_list=hand_landmarks,
-                        connections=mp_hands.HAND_CONNECTIONS,
-                        landmark_drawing_spec=mp_drawing_styles.get_default_hand_landmarks_style(),
-                        connection_drawing_spec=mp_drawing_styles.get_default_hand_connections_style(),
-                    )
+                # for hand_landmarks in results.multi_hand_landmarks:
+                #     mp_drawing.draw_landmarks(
+                #         image=frame,
+                #         landmark_list=hand_landmarks,
+                #         connections=mp_hands.HAND_CONNECTIONS,
+                #         landmark_drawing_spec=mp_drawing_styles.get_default_hand_landmarks_style(),
+                #         connection_drawing_spec=mp_drawing_styles.get_default_hand_connections_style(),
+                #     )
                 
                 hand_landmarks = results.multi_hand_landmarks[0]
 
@@ -59,14 +59,14 @@ def main():
                 y_min = center_y - side - 50
                 y_max = center_y + side + 50
 
-                cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+                # cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
 
                 # and if we find the bounding box, crop the frame to that bounding box
                 # and force resize the frame to 200x200px
                 hand_frame = frame[y_min:y_max, x_min:x_max]
                 if hand_frame.size > 0:
                     hand_frame = cv2.resize(hand_frame, (200, 200))
-                    cv2.imshow("Hand", hand_frame)
+                    # cv2.imshow("Hand", hand_frame)
 
 
             cv2.imshow("Hand Detection", frame)
